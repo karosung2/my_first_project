@@ -1,10 +1,36 @@
-body { font-family: Arial, sans-serif; margin: 20px; }
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .main-header h1 { margin: 0; }
 .main-header .auth a { margin-left: 10px; }
-.teams { display: flex; flex-wrap: wrap; justify-content: center; }
+.teams {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .team { margin: 10px; text-align: center; width: 140px; }
 .logo { width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto 5px; }
 .post { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
 .posts { border-collapse: collapse; width: 100%; margin-top: 10px; }
 .posts th, .posts td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+
+/* Background styling for the index page. Replace BACKGROUND_IMAGE_URL with the
+   desired image URL. */
+body.index {
+    background: url('BACKGROUND_IMAGE_URL') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+body.index::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: inherit;
+    opacity: 0.2;
+    z-index: -1;
+}

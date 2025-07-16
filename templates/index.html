@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>KBO Fan Boards</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>KBO Teams</h1>
+    <div class="teams">
+    {% for team in teams %}
+        <div class="team">
+            <a href="{{ url_for('team_board', team=team) }}">
+                <div class="icon">{{ team.split()[0][0] }}</div>
+                <div class="name">{{ team }}</div>
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>

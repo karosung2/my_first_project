@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
 import requests
@@ -6,9 +6,11 @@ import os
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+app.secret_key = 'secret-key'
 
-# simple in-memory storage for posts
+# simple in-memory storage for posts and users
 posts = {}
+users = {}
 
 # list of KBO teams (fallback order)
 DEFAULT_TEAMS = [
@@ -38,6 +40,19 @@ TEAM_NAME_MAP = {
     '키움': 'Kiwoom Heroes'
 }
 
+# simple logo mapping (public URLs)
+TEAM_LOGOS = {
+    'Doosan Bears': 'https://sports-phinf.pstatic.net/team/kbo/default/OB.png',
+    'Lotte Giants': 'https://sports-phinf.pstatic.net/team/kbo/default/LT.png',
+    'Hanwha Eagles': 'https://sports-phinf.pstatic.net/team/kbo/default/HH.png',
+    'LG Twins': 'https://sports-phinf.pstatic.net/team/kbo/default/LG.png',
+    'SSG Landers': 'https://sports-phinf.pstatic.net/team/kbo/default/SK.png',
+    'Samsung Lions': 'https://sports-phinf.pstatic.net/team/kbo/default/SS.png',
+    'KIA Tigers': 'https://sports-phinf.pstatic.net/team/kbo/default/HT.png',
+    'KT Wiz': 'https://sports-phinf.pstatic.net/team/kbo/default/KT.png',
+    'NC Dinos': 'https://sports-phinf.pstatic.net/team/kbo/default/NC.png',
+    'Kiwoom Heroes': 'https://sports-phinf.pstatic.net/team/kbo/default/WO.png'
+}
 
 def fetch_ranked_teams():
     """Attempt to fetch team rankings from the KBO website."""
@@ -69,7 +84,8 @@ def get_ranked_teams():
 @app.route('/')
 def index():
     teams = get_ranked_teams()
-    return render_template('index.html', teams=teams)
+    nickname = session.get('nickname')
+    return render_template('index.html', teams=teams, logos=TEAM_LOGOS, nickname=nickname)
 
 @app.route('/team/<team>', methods=['GET', 'POST'])
 def team_board(team):
@@ -79,7 +95,7 @@ def team_board(team):
 
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
-        username = request.form.get('username', 'Anonymous').strip() or 'Anonymous'
+        username = session.get('nickname') or request.form.get('username', 'Anonymous').strip() or 'Anonymous'
         content = request.form.get('content', '')
         file = request.files.get('file')
         filename = None
@@ -98,7 +114,8 @@ def team_board(team):
         return redirect(url_for('team_board', team=team))
 
     team_posts = posts.get(team, [])
-    return render_template('team.html', team=team, posts=team_posts)
+    nickname = session.get('nickname')
+    return render_template('team.html', team=team, posts=team_posts, nickname=nickname)
 
 
 @app.route('/team/<team>/post/<int:post_id>')
@@ -110,7 +127,46 @@ def view_post(team, post_id):
     if post_id < 0 or post_id >= len(team_posts):
         return "Post not found", 404
     post = team_posts[post_id]
-    return render_template('post.html', team=team, post=post)
+    nickname = session.get('nickname')
+    return render_template('post.html', team=team, post=post, nickname=nickname)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        user_id = request.form.get('id', '').strip()
+        password = request.form.get('password', '')
+        user = users.get(user_id)
+        if user and user['password'] == password:
+            session['user'] = user_id
+            session['nickname'] = user['nickname']
+            return redirect(url_for('index'))
+        error = 'Invalid credentials'
+    return render_template('login.html', error=error)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        user_id = request.form.get('id', '').strip()
+        password = request.form.get('password', '')
+        nickname = request.form.get('nickname', '').strip()
+        if not user_id or user_id in users:
+            error = 'ID already exists'
+        else:
+            users[user_id] = {'password': password, 'nickname': nickname or user_id}
+            session['user'] = user_id
+            session['nickname'] = users[user_id]['nickname']
+            return redirect(url_for('index'))
+    return render_template('register.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

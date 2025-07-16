@@ -1,7 +1,9 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
-.teams { display: block; }
+.header { display: flex; justify-content: space-between; align-items: center; }
+.nav a { margin-left: 10px; }
+.teams { display: flex; flex-direction: column; align-items: center; }
 .team { margin: 10px 0; text-align: center; }
-.icon { width: 80px; height: 80px; background: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 5px; }
+.icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 5px; }
 .post { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
 .posts { border-collapse: collapse; width: 100%; margin-top: 10px; }
 .posts th, .posts td { border: 1px solid #ccc; padding: 8px; text-align: left; }

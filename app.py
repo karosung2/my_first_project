@@ -43,18 +43,18 @@ TEAM_NAME_MAP = {
     '키움': 'Kiwoom Heroes'
 }
 
-# simple logo mapping (public URLs)
+# logo mapping using the URLs provided by the user
 TEAM_LOGOS = {
-    'Doosan Bears': 'https://sports-phinf.pstatic.net/team/kbo/default/OB.png',
-    'Lotte Giants': 'https://sports-phinf.pstatic.net/team/kbo/default/LT.png',
-    'Hanwha Eagles': 'https://sports-phinf.pstatic.net/team/kbo/default/HH.png',
-    'LG Twins': 'https://sports-phinf.pstatic.net/team/kbo/default/LG.png',
-    'SSG Landers': 'https://sports-phinf.pstatic.net/team/kbo/default/SK.png',
-    'Samsung Lions': 'https://sports-phinf.pstatic.net/team/kbo/default/SS.png',
-    'KIA Tigers': 'https://sports-phinf.pstatic.net/team/kbo/default/HT.png',
-    'KT Wiz': 'https://sports-phinf.pstatic.net/team/kbo/default/KT.png',
-    'NC Dinos': 'https://sports-phinf.pstatic.net/team/kbo/default/NC.png',
-    'Kiwoom Heroes': 'https://sports-phinf.pstatic.net/team/kbo/default/WO.png'
+    'Hanwha Eagles': 'http://www.thesportstimes.co.kr/news/photo/202502/359779_34114_1933.png',
+    'LG Twins': 'https://www.thesportstimes.co.kr/news/photo/202503/361530_34990_2442.png',
+    'KIA Tigers': 'https://www.thesportstimes.co.kr/news/photo/202502/359771_34107_427.png',
+    'Lotte Giants': 'https://www.thesportstimes.co.kr/news/photo/202503/361534_34994_2637.jpg',
+    'KT Wiz': 'https://www.thesportstimes.co.kr/news/photo/202502/359776_34111_647.jpg',
+    'SSG Landers': 'https://www.thesportstimes.co.kr/news/photo/202502/359777_34112_1257.png',
+    'NC Dinos': 'http://www.thesportstimes.co.kr/news/photo/202502/359780_34115_2021.png',
+    'Samsung Lions': 'https://www.thesportstimes.co.kr/news/photo/202503/361529_34989_2416.png',
+    'Doosan Bears': 'https://www.thesportstimes.co.kr/news/photo/202503/361531_34991_2518.png',
+    'Kiwoom Heroes': 'https://www.thesportstimes.co.kr/news/photo/202412/357262_32793_5718.jpg'
 }
 
 def fetch_ranked_teams():
@@ -122,7 +122,9 @@ def index():
     teams = get_ranked_teams()
     username = session.get('username')
     nickname = users.get(username, {}).get('nickname') if username else None
-    return render_template('index.html', teams=teams, username=username, nickname=nickname)
+    return render_template('index.html', teams=teams, logos=TEAM_LOGOS,
+                           username=username, nickname=nickname,
+                           body_class='index')
 
 @app.route('/team/<team>', methods=['GET', 'POST'])
 def team_board(team):

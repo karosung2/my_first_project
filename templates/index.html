@@ -4,7 +4,7 @@
     {% for team in teams %}
         <div class="team">
             <a href="{{ url_for('team_board', team=team) }}">
-                <img class="logo" src="{{ url_for('static', filename='logos/' + team|lower|replace(' ', '_') + '.svg') }}" alt="{{ team }} logo">
+                <img class="logo" src="{{ logos.get(team) }}" alt="{{ team }} logo">
                 <div class="name">{{ team }}</div>
             </a>
         </div>

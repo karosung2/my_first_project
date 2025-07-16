@@ -32,7 +32,8 @@ def team_board(team):
         return "Unknown team", 404
 
     if request.method == 'POST':
-        username = request.form.get('username', 'Anonymous')
+        title = request.form.get('title', '').strip()
+        username = request.form.get('username', 'Anonymous').strip() or 'Anonymous'
         content = request.form.get('content', '')
         file = request.files.get('file')
         filename = None
@@ -43,6 +44,7 @@ def team_board(team):
             file.save(os.path.join(team_folder, filename))
 
         posts.setdefault(team, []).append({
+            'title': title or 'No Title',
             'username': username,
             'content': content,
             'filename': filename
@@ -51,6 +53,17 @@ def team_board(team):
 
     team_posts = posts.get(team, [])
     return render_template('team.html', team=team, posts=team_posts)
+
+
+@app.route('/team/<team>/post/<int:post_id>')
+def view_post(team, post_id):
+    if team not in TEAMS:
+        return "Unknown team", 404
+    team_posts = posts.get(team, [])
+    if post_id < 0 or post_id >= len(team_posts):
+        return "Post not found", 404
+    post = team_posts[post_id]
+    return render_template('post.html', team=team, post=post)
 
 if __name__ == '__main__':
     app.run(debug=True)

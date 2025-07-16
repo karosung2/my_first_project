@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ team }} Board</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h1>{{ team }} Fan Board</h1>
+    <a href="/">Back to Teams</a>
+
+    <h2>New Post</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="username" placeholder="Your name"><br>
+        <textarea name="content" placeholder="Write your post"></textarea><br>
+        <input type="file" name="file"><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Posts</h2>
+    {% for post in posts %}
+        <div class="post">
+            <p><strong>{{ post.username }}</strong></p>
+            <p>{{ post.content }}</p>
+            {% if post.filename %}
+                <p>Attachment: <a href="{{ url_for('static', filename='uploads/' + team + '/' + post.filename) }}">{{ post.filename }}</a></p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No posts yet.</p>
+    {% endfor %}
+</body>
+</html>

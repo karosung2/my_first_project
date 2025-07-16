@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ post.title }}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <h1>{{ post.title }}</h1>
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ post.title }}</h2>
     <p><strong>Author:</strong> {{ post.username }}</p>
     <p>{{ post.content }}</p>
     {% if post.filename %}
         <p>Attachment: <a href="{{ url_for('static', filename='uploads/' + team + '/' + post.filename) }}">{{ post.filename }}</a></p>
     {% endif %}
     <a href="{{ url_for('team_board', team=team) }}">Back to Board</a>
-</body>
-</html>
+{% endblock %}

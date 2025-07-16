@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ team }} Board</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <h1>{{ team }} Fan Board</h1>
-    <a href="/">Back to Teams</a>
+{% extends 'base.html' %}
+{% block content %}
+    <h2 class="board-title">{{ team }} Fan Board</h2>
+    <a href="{{ url_for('index') }}">Back to Teams</a>
 
-    <h2>New Post</h2>
+    <h3>New Post</h3>
     <form method="POST" enctype="multipart/form-data">
         <input type="text" name="title" placeholder="Title"><br>
-        <input type="text" name="username" placeholder="Your name"><br>
+        {% if not username %}
+            <input type="text" name="username" placeholder="Your name"><br>
+        {% endif %}
         <textarea name="content" placeholder="Write your post"></textarea><br>
         <input type="file" name="file"><br>
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Posts</h2>
+    <h3>Posts</h3>
     <table class="posts">
         <tr><th>Title</th><th>Author</th></tr>
         {% for post in posts %}
@@ -30,5 +26,4 @@
             <tr><td colspan="2">No posts yet.</td></tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}

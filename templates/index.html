@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>KBO Fan Boards</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <h1>KBO Teams</h1>
+{% extends 'base.html' %}
+{% block content %}
     <div class="teams">
     {% for team in teams %}
         <div class="team">
             <a href="{{ url_for('team_board', team=team) }}">
-                <div class="icon">{{ team.split()[0][0] }}</div>
+                <img class="logo" src="{{ url_for('static', filename='logos/' + team|lower|replace(' ', '_') + '.svg') }}" alt="{{ team }} logo">
                 <div class="name">{{ team }}</div>
             </a>
         </div>
     {% endfor %}
     </div>
-</body>
-</html>
+{% endblock %}

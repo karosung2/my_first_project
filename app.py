@@ -42,6 +42,19 @@ TEAM_NAME_MAP = {
     '키움': 'Kiwoom Heroes'
 }
 
+# simple logo mapping (public URLs)
+TEAM_LOGOS = {
+    'Doosan Bears': 'https://sports-phinf.pstatic.net/team/kbo/default/OB.png',
+    'Lotte Giants': 'https://sports-phinf.pstatic.net/team/kbo/default/LT.png',
+    'Hanwha Eagles': 'https://sports-phinf.pstatic.net/team/kbo/default/HH.png',
+    'LG Twins': 'https://sports-phinf.pstatic.net/team/kbo/default/LG.png',
+    'SSG Landers': 'https://sports-phinf.pstatic.net/team/kbo/default/SK.png',
+    'Samsung Lions': 'https://sports-phinf.pstatic.net/team/kbo/default/SS.png',
+    'KIA Tigers': 'https://sports-phinf.pstatic.net/team/kbo/default/HT.png',
+    'KT Wiz': 'https://sports-phinf.pstatic.net/team/kbo/default/KT.png',
+    'NC Dinos': 'https://sports-phinf.pstatic.net/team/kbo/default/NC.png',
+    'Kiwoom Heroes': 'https://sports-phinf.pstatic.net/team/kbo/default/WO.png'
+}
 
 def fetch_ranked_teams():
     """Attempt to fetch team rankings from the KBO website."""

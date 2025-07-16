@@ -6,7 +6,10 @@ import os
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
-app.secret_key = 'secret-key'
+app.secret_key = 'dev_key'  # simple dev secret
+
+# simple in-memory user store {username: {'password': pwd, 'nickname': nick}}
+users = {}
 
 # simple in-memory storage for posts and users
 posts = {}
@@ -81,11 +84,45 @@ def get_ranked_teams():
         get_ranked_teams.cache = fetch_ranked_teams()
     return get_ranked_teams.cache
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        user = users.get(username)
+        if user and user['password'] == password:
+            session['username'] = username
+            return redirect(url_for('index'))
+        return render_template('login.html', error='Invalid credentials')
+    return render_template('login.html')
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        nickname = request.form.get('nickname', '').strip()
+        if not username or not password:
+            return render_template('signup.html', error='Username and password required')
+        if username in users:
+            return render_template('signup.html', error='User already exists')
+        users[username] = {'password': password, 'nickname': nickname or username}
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     teams = get_ranked_teams()
-    nickname = session.get('nickname')
-    return render_template('index.html', teams=teams, logos=TEAM_LOGOS, nickname=nickname)
+    username = session.get('username')
+    nickname = users.get(username, {}).get('nickname') if username else None
+    return render_template('index.html', teams=teams, username=username, nickname=nickname)
 
 @app.route('/team/<team>', methods=['GET', 'POST'])
 def team_board(team):
@@ -95,7 +132,7 @@ def team_board(team):
 
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
-        username = session.get('nickname') or request.form.get('username', 'Anonymous').strip() or 'Anonymous'
+        username = session.get('username', request.form.get('username', 'Anonymous')).strip() or 'Anonymous'
         content = request.form.get('content', '')
         file = request.files.get('file')
         filename = None
@@ -114,8 +151,9 @@ def team_board(team):
         return redirect(url_for('team_board', team=team))
 
     team_posts = posts.get(team, [])
-    nickname = session.get('nickname')
-    return render_template('team.html', team=team, posts=team_posts, nickname=nickname)
+    username = session.get('username')
+    nickname = users.get(username, {}).get('nickname') if username else None
+    return render_template('team.html', team=team, posts=team_posts, username=username, nickname=nickname)
 
 
 @app.route('/team/<team>/post/<int:post_id>')
@@ -127,46 +165,9 @@ def view_post(team, post_id):
     if post_id < 0 or post_id >= len(team_posts):
         return "Post not found", 404
     post = team_posts[post_id]
-    nickname = session.get('nickname')
-    return render_template('post.html', team=team, post=post, nickname=nickname)
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        user_id = request.form.get('id', '').strip()
-        password = request.form.get('password', '')
-        user = users.get(user_id)
-        if user and user['password'] == password:
-            session['user'] = user_id
-            session['nickname'] = user['nickname']
-            return redirect(url_for('index'))
-        error = 'Invalid credentials'
-    return render_template('login.html', error=error)
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    error = None
-    if request.method == 'POST':
-        user_id = request.form.get('id', '').strip()
-        password = request.form.get('password', '')
-        nickname = request.form.get('nickname', '').strip()
-        if not user_id or user_id in users:
-            error = 'ID already exists'
-        else:
-            users[user_id] = {'password': password, 'nickname': nickname or user_id}
-            session['user'] = user_id
-            session['nickname'] = users[user_id]['nickname']
-            return redirect(url_for('index'))
-    return render_template('register.html', error=error)
-
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+    username = session.get('username')
+    nickname = users.get(username, {}).get('nickname') if username else None
+    return render_template('post.html', team=team, post=post, username=username, nickname=nickname)
 
 if __name__ == '__main__':
     app.run(debug=True)

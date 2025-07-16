@@ -1,9 +1,10 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
-.header { display: flex; justify-content: space-between; align-items: center; }
-.nav a { margin-left: 10px; }
-.teams { display: flex; flex-direction: column; align-items: center; }
-.team { margin: 10px 0; text-align: center; }
-.icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 5px; }
+.main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.main-header h1 { margin: 0; }
+.main-header .auth a { margin-left: 10px; }
+.teams { display: flex; flex-wrap: wrap; justify-content: center; }
+.team { margin: 10px; text-align: center; width: 140px; }
+.logo { width: 80px; height: 80px; object-fit: contain; display: block; margin: 0 auto 5px; }
 .post { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
 .posts { border-collapse: collapse; width: 100%; margin-top: 10px; }
 .posts th, .posts td { border: 1px solid #ccc; padding: 8px; text-align: left; }

@@ -1,33 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ team }} Board</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <div class="header">
-        <h1><a href="{{ url_for('index') }}">프로야구 응원단</a></h1>
-        <div class="nav">
-            {% if nickname %}
-                <span>{{ nickname }}</span>
-                <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Sign Up</a>
-            {% endif %}
-        </div>
-    </div>
-    <h1>{{ team }} Fan Board</h1>
+{% extends 'base.html' %}
+{% block content %}
+    <h2 class="board-title">{{ team }} Fan Board</h2>
     <a href="{{ url_for('index') }}">Back to Teams</a>
 
-    <h2>New Post</h2>
+    <h3>New Post</h3>
     <form method="POST" enctype="multipart/form-data">
         <input type="text" name="title" placeholder="Title"><br>
-        {% if nickname %}
-            <input type="hidden" name="username" value="{{ nickname }}">
-            <p><strong>Author:</strong> {{ nickname }}</p>
-        {% else %}
+        {% if not username %}
             <input type="text" name="username" placeholder="Your name"><br>
         {% endif %}
         <textarea name="content" placeholder="Write your post"></textarea><br>
@@ -35,7 +14,7 @@
         <button type="submit">Submit</button>
     </form>
 
-    <h2>Posts</h2>
+    <h3>Posts</h3>
     <table class="posts">
         <tr><th>Title</th><th>Author</th></tr>
         {% for post in posts %}
@@ -47,5 +26,4 @@
             <tr><td colspan="2">No posts yet.</td></tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}

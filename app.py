@@ -54,7 +54,6 @@ TEAM_LOGOS = {
     'Kiwoom Heroes': 'https://sports-phinf.pstatic.net/team/kbo/default/WO.png'
 }
 
-
 def fetch_ranked_teams():
     """Attempt to fetch team rankings from the KBO website."""
     url = 'https://www.koreabaseball.com/Record/TeamRank/TeamRank.aspx'

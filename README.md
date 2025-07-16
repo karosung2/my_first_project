@@ -2,9 +2,10 @@
 
 Simple KBO team fan board built with Flask.
 
-Each team has a message board where fans can post a title, content and an optional
-file attachment. Posts are listed with their titles and authors; clicking a title
-shows the full post.
+## Features
+- Lists KBO teams in live ranking order using data from `koreabaseball.com`
+- Team boards let fans post a title, content and optional file attachment
+- Posts are listed by title and author; clicking a title shows the full post
 
 ## Setup
 ```

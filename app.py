@@ -11,8 +11,9 @@ app.secret_key = 'dev_key'  # simple dev secret
 # simple in-memory user store {username: {'password': pwd, 'nickname': nick}}
 users = {}
 
-# simple in-memory storage for posts
+# simple in-memory storage for posts and users
 posts = {}
+users = {}
 
 # list of KBO teams (fallback order)
 DEFAULT_TEAMS = [
